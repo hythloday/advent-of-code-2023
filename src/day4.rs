@@ -32,7 +32,7 @@ impl Card {
     }
 
     fn parse_number_list(c: &str) -> IResult<&str, Vec<u32>> {
-        separated_list(space1, Self::parse_number)(c)
+        separated_list1(space1, Self::parse_number)(c)
     }
 
     // Card 1: 41 48 83 86 17 | 83 86  6 31 17  9 48 53
@@ -56,7 +56,11 @@ impl Card {
 }
 
 impl FromStr for Card {
-    type Err = nom::Err<(String, nom::error::ErrorKind)>;
+
+    // Result<_, nom::Err<(String, nom::Err<String>)>>
+    // Result<_, nom::Err<nom::error::Error<String>>>
+
+    type Err = nom::Err<nom::error::Error<String>>;
 
     fn from_str(s: &str) -> Result<Self, Self::Err> {
         complete(Card::parse_card)(s)

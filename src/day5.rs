@@ -42,6 +42,7 @@ struct Almanac {
 }
 
 impl Almanac {
+    #[warn(dead_code)]
     fn verbose_translate_seed(&self, seed: u64) -> u64 {
         let soil = self.seed_to_soil.translate(seed);
         println!("seed to soil: {} -> {}", seed, soil);

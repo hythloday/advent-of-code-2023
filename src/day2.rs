@@ -4,7 +4,7 @@ use nom::bytes::complete::tag;
 use nom::character::complete::char;
 use nom::character::complete::{digit1, space1};
 use nom::combinator::{map, map_res};
-use nom::multi::separated_list;
+use nom::multi::separated_list1;
 use nom::sequence::{pair, tuple};
 use nom::IResult;
 use std::error::Error;
@@ -72,7 +72,7 @@ fn parse_game_and_id(g: &str) -> nom::IResult<&str, Game> {
         parse_numbers,
         char(':'),
         space1,
-        separated_list(pair(char(';'), space1), parse_draw),
+        separated_list1(pair(char(';'), space1), parse_draw),
     ));
 
     map(game_parser, |(_, _, b, _, _, draws)| Game {
@@ -82,7 +82,7 @@ fn parse_game_and_id(g: &str) -> nom::IResult<&str, Game> {
 }
 
 fn parse_draw(g: &str) -> nom::IResult<&str, Draw> {
-    let draw_parser = separated_list(
+    let draw_parser = separated_list1(
         pair(char(','), space1),
         tuple((
             parse_numbers,
